@@ -133,7 +133,7 @@ pub fn create_bytecode(irdata: IRWriter) -> (BString, Vec<(u16, u16, u16, u16)>)
                 if data.is_table {
                     stream.u8(TABLESWITCH); for _ in 0..pad { stream.u8(0); }
                     stream.i32(offset); stream.i32(data.low); stream.i32(data.high);
-                    for k in data.low...data.high {
+                    for k in data.low..=data.high {
                         let target = *data.jumps.get(&k).unwrap_or(&data.default);
                         stream.i32(info.offset(*pos, target));
                     }
