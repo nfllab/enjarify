@@ -146,14 +146,14 @@ pub struct PCImpl {
     pub key: Entry<'static>,
 }
 impl PCImpl {
-    pub fn fix_with_pool(&self, pool: &mut ConstantPool, bc: &mut Option<BString>) {
+    pub fn fix_with_pool(&self, pool: &mut dyn ConstantPool, bc: &mut Option<BString>) {
         if bc.as_ref().unwrap().len() <= 2 { return; }
         let newbc = from_pool(pool, self.key.clone(), self.st.is_wide());
         if newbc.is_some() { *bc = newbc; }
     }
 }
 
-fn from_pool<'a>(pool: &mut ConstantPool<'a>, key: Entry<'a>, wide: bool) -> Option<BString> {
+fn from_pool<'a>(pool: &mut dyn ConstantPool<'a>, key: Entry<'a>, wide: bool) -> Option<BString> {
     pool.try_get(key).map(|index|
         if wide {
             pack::BH(LDC2_W, index)
@@ -165,7 +165,7 @@ fn from_pool<'a>(pool: &mut ConstantPool<'a>, key: Entry<'a>, wide: bool) -> Opt
     )
 }
 
-pub fn prim_const<'a>(st: scalar::T, val: u64, pool: Option<&mut (ConstantPool<'a> + 'a)>) -> JvmInstruction {
+pub fn prim_const<'a>(st: scalar::T, val: u64, pool: Option<&mut (dyn ConstantPool<'a> + 'a)>) -> JvmInstruction {
     assert!(st.is_wide() || val == (val as u32 as u64));
     let val = calc::normalize(st, val);
     let args = ArgsPrim(val);

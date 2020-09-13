@@ -57,7 +57,7 @@ impl array::T {
 
 struct IRBlock<'b, 'a: 'b> {
     pos: u32,
-    pool: &'b mut (ConstantPool<'a> + 'a),
+    pool: &'b mut (dyn ConstantPool<'a> + 'a),
     type_info: TypeInfo,
     instructions: Vec<ir::JvmInstruction>,
     delay_consts: bool,
@@ -178,7 +178,7 @@ impl <'b, 'a> IRBlock<'b, 'a> {
     }
 }
 
-pub fn write_instruction<'b, 'a>(pool: &'b mut (ConstantPool<'a> + 'a), method: &dex::Method<'a>, opts: Options, dex: &'a dex::DexFile<'a>, instr: &DalvikInstruction<'a>, type_info: &TypeInfo, instr_d: &HashMap<u32, &DalvikInstruction<'a>>, can_throw: bool) -> (u32, Vec<ir::JvmInstruction>) {
+pub fn write_instruction<'b, 'a>(pool: &'b mut (dyn ConstantPool<'a> + 'a), method: &dex::Method<'a>, opts: Options, dex: &'a dex::DexFile<'a>, instr: &DalvikInstruction<'a>, type_info: &TypeInfo, instr_d: &HashMap<u32, &DalvikInstruction<'a>>, can_throw: bool) -> (u32, Vec<ir::JvmInstruction>) {
 
     let mut block = IRBlock{
         pos: instr.pos,

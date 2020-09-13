@@ -14,7 +14,7 @@
 use std::collections::HashSet;
 // use std::fmt;
 use std::ops::Deref;
-use std::str;
+
 
 use strings::*;
 use byteio::Reader;

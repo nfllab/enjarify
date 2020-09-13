@@ -89,7 +89,6 @@ pub fn decode(shorts: &[u16], pos: usize, opcode: u8) -> (usize, DalvikArgs) {
         0xd0..=0xd7 => (2, N2, S),
         0xd8..=0xe2 => (2, N2, B),
         0xe3..=0xff => (1, N0, X),
-        _ => unreachable!()
     };
 
     let mut d = DalvikArgs::default();

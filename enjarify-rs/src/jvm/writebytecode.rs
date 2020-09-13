@@ -24,7 +24,7 @@ use super::optimization::{consts, jumps, registers, stack};
 use super::optimization::options::Options;
 use super::writeir::{IRWriter, write_bytecode};
 
-pub fn get_code_ir<'b, 'a>(pool: &'b mut (ConstantPool<'a> + 'a), method: &dex::Method<'a>, opts: Options) -> Option<IRWriter> {
+pub fn get_code_ir<'b, 'a>(pool: &'b mut (dyn ConstantPool<'a> + 'a), method: &dex::Method<'a>, opts: Options) -> Option<IRWriter> {
     method.code.as_ref().map(|ref code| {
         let mut irdata = write_bytecode(pool, method, code, opts);
 
@@ -47,7 +47,7 @@ pub fn get_code_ir<'b, 'a>(pool: &'b mut (ConstantPool<'a> + 'a), method: &dex::
     })
 }
 
-pub fn finish_code_attrs<'a>(pool: &mut (ConstantPool<'a> + 'a), code_irs: Vec<Option<IRWriter>>, opts: Options) -> HashMap<u32, BString> {
+pub fn finish_code_attrs<'a>(pool: &mut (dyn ConstantPool<'a> + 'a), code_irs: Vec<Option<IRWriter>>, opts: Options) -> HashMap<u32, BString> {
     let mut code_irs = {
         let mut v = Vec::with_capacity(code_irs.len());
         for x in code_irs { if let Some(irw) = x {v.push(irw);} }

@@ -18,7 +18,7 @@ use jvm::constantpool::Entry;
 use jvm::ir;
 use jvm::writeir::IRWriter;
 
-pub fn allocate_required_constants(pool: &mut ConstantPool, irs: Vec<&IRWriter>) {
+pub fn allocate_required_constants(pool: &mut dyn ConstantPool, irs: Vec<&IRWriter>) {
     // We allocate the constants pretty much greedily. This is far from optimal,
     // but it shouldn't be a big deal since this code is almost never required
     // in the first place. In fact, there are no known real world classes that

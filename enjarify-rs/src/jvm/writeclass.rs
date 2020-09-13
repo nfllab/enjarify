@@ -24,7 +24,7 @@ use super::constantpool::{ConstantPool, simple_pool, split_pool};
 use super::optimization::options::Options;
 use super::writebytecode::{get_code_ir, finish_code_attrs};
 
-fn write_field<'a>(pool: &mut ConstantPool<'a>, stream: &mut Writer, field: &Field<'a>) {
+fn write_field<'a>(pool: &mut dyn ConstantPool<'a>, stream: &mut Writer, field: &Field<'a>) {
     stream.u16(field.access as u16 & flags::FIELD_FLAGS);
     stream.u16(pool.utf8(field.id.name));
     stream.u16(pool.utf8(field.id.desc));
@@ -56,7 +56,7 @@ fn write_field<'a>(pool: &mut ConstantPool<'a>, stream: &mut Writer, field: &Fie
     }
 }
 
-fn write_methods<'a>(pool: &mut (ConstantPool<'a> + 'a), stream: &mut Writer, methods: Vec<Method<'a>>, opts: Options) {
+fn write_methods<'a>(pool: &mut (dyn ConstantPool<'a> + 'a), stream: &mut Writer, methods: Vec<Method<'a>>, opts: Options) {
     let code_irs = methods.iter().map(|ref m| get_code_ir(pool, &m, opts)).collect();
     let code_attrs = finish_code_attrs(pool, code_irs, opts);
 
@@ -80,7 +80,7 @@ fn write_methods<'a>(pool: &mut (ConstantPool<'a> + 'a), stream: &mut Writer, me
     }
 }
 
-fn after_pool<'a, 'b>(cls: &'b DexClass<'a>, opts: Options) -> (Box<ConstantPool<'a> + 'a>, Writer) {
+fn after_pool<'a, 'b>(cls: &'b DexClass<'a>, opts: Options) -> (Box<dyn ConstantPool<'a> + 'a>, Writer) {
     let mut stream = Writer::default();
     let mut pool = if opts.split_pool {
         split_pool()

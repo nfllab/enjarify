@@ -160,7 +160,6 @@ fn op_to_type(opcode: u8) -> DalvikType {
         0x90..=0xcf => BinaryOp,
         0xd0..=0xe2 => BinaryOpConst,
         0xe3..=0xff => Nop,
-        _ => unreachable!()
     }
 }
 

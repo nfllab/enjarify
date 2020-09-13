@@ -62,7 +62,7 @@ fn increment<K: Eq + Hash>(map: &mut HashMap<K, u32>, key: K) {
     *map.entry(key).or_insert(0) += 1;
 }
 
-pub fn write_bytecode<'b, 'a>(pool: &'b mut (ConstantPool<'a> + 'a), method: &dex::Method<'a>, code: &dex::CodeItem<'a>, opts: Options) -> IRWriter {
+pub fn write_bytecode<'b, 'a>(pool: &'b mut (dyn ConstantPool<'a> + 'a), method: &dex::Method<'a>, code: &dex::CodeItem<'a>, opts: Options) -> IRWriter {
     let dex = method.dex;
 
     let instr_d = {

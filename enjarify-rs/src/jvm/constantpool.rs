@@ -196,7 +196,7 @@ impl<'a> ConstantPool<'a> for SimplePool<'a> {
     }
 }
 
-pub fn simple_pool<'a>() -> Box<ConstantPool<'a> + 'a> {
+pub fn simple_pool<'a>() -> Box<dyn ConstantPool<'a> + 'a> {
     Box::new(SimplePool{
         lookup: HashMap::new(),
         vals: vec![None],
@@ -263,7 +263,7 @@ impl<'a> ConstantPool<'a> for SplitPool<'a> {
     }
 }
 
-pub fn split_pool<'a>() -> Box<ConstantPool<'a> + 'a> {
+pub fn split_pool<'a>() -> Box<dyn ConstantPool<'a> + 'a> {
     Box::new(SplitPool{
         lookup: HashMap::new(),
         vals: vec![None; 65535],
