@@ -72,10 +72,12 @@ fn read_jar(fname: &str) -> Vec<(String, BString)> {
 
 pub fn write_to_jar(fname: &str, classes: Vec<(String, BString)>) {
     let mut archive = zip::ZipWriter::new(File::create(fname).unwrap());
+    let notime = zip::DateTime::from_date_and_time(1980, 1, 1, 0, 0, 0).unwrap();
+    let options = zip::write::FileOptions::default().last_modified_time(notime).unix_permissions(0o775);
     for (unicode_name, data) in classes.into_iter() {
         // Don't bother compressing small files
         let method = if data.len() > 10000 {Deflated} else {Stored};
-        archive.start_file(unicode_name, method).unwrap();
+        archive.start_file(unicode_name, options.compression_method(method)).unwrap();
         archive.write_all(&data).unwrap();
     }
 }
