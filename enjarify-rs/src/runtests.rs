@@ -25,7 +25,7 @@ use super::{read, read_jar, translate, write_to_jar};
 pub fn main() {
     let pool = CpuPool::new_num_cpus();
     let stubs = read_jar("../tests/stubs/stubs.zip");
-    for test in 1..7 {
+    for test in 1..=7 {
         println!("test{}", test);
         let data = read(format!("../tests/test{}/classes.dex", test));
         let dexes = vec![data];

@@ -186,6 +186,7 @@
     instance-of v2, v1, [L0;
     if-eqz v2, :end2
 
+        check-cast v1, [L0;
         aget-object v2, v1, v2
         sput-object v2, La/a;->w:L0;
         check-cast v2, L00;
@@ -317,10 +318,11 @@
 .method public static testBoolArrays()V
     .locals 04
     const-string v0, "testBoolArrays"
+    invoke-static {v0}, LL/util;->print(Ljava/lang/Object;)V
 
     const v0, 0
     invoke-static {v0}, La/a;->testBoolArraysSub(Z)V
-    const v1, 0
+    const v0, 1
     invoke-static {v0}, La/a;->testBoolArraysSub(Z)V
 
     return-void
