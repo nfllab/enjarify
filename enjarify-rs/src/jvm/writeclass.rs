@@ -88,7 +88,13 @@ fn after_pool<'a, 'b>(cls: &'b DexClass<'a>, opts: Options) -> (Box<dyn Constant
         simple_pool()
     };
 
-    stream.u16(cls.access as u16 & flags::CLASS_FLAGS);
+    let mut access = cls.access as u16 & flags::CLASS_FLAGS;
+    if access & flags::ACC_INTERFACE == 0 {
+        // Not necessary for correctness, but this works around a bug in dx
+        access |= flags::ACC_SUPER;
+    }
+
+    stream.u16(access);
     stream.u16(pool.class(cls.name));
     stream.u16(match cls.super_ {
         Some(v) => pool.class(v),
