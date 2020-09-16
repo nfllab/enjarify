@@ -22,6 +22,10 @@ use strings::*;
 use jvm::optimization::options::Options;
 use super::{read, read_jar, translate, write_to_jar};
 
+pub fn canonical_newlines(s: &str) -> String {
+    s.replace("\r\n", "\n").replace("\r", "\n")
+}
+
 pub fn main() {
     let pool = CpuPool::new_num_cpus();
     let stubs = read_jar("../tests/stubs/stubs.zip");
@@ -30,7 +34,7 @@ pub fn main() {
         let data = read(format!("../tests/test{}/classes.dex", test));
         let dexes = vec![data];
         let expected = read(format!("../tests/test{}/expected.txt", test));
-        let expected = (to_string(expected) + "\n").replace("\r\n", "\n");
+        let expected = canonical_newlines(&to_string(expected));
 
         for opts in &[Options::none(), Options::pretty(), Options::all()] {
             let results = translate(&pool, *opts, &dexes);
@@ -48,7 +52,8 @@ pub fn main() {
             // let mut f = File::create("actual.txt").unwrap();
             // f.write_all(&result).unwrap();
 
-            assert_eq!(to_string(result), expected);
+            let result = canonical_newlines(&to_string(result));
+            assert_eq!(result, expected);
         }
     }
     println!("all tests passed!");
